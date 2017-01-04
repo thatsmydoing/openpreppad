@@ -1,0 +1,15 @@
+{
+  "name": "openpreppad",
+  "version": "0.0.1",
+  "description": "TUI for Prep Pad",
+  "main": "index.js",
+  "dependencies": {
+    "noble": "^1.7.0",
+  ,
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thomas Dy <thatsmydoing@gmail.com>",
+  "license": "ISC"
+}
