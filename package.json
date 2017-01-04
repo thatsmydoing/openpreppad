@@ -4,8 +4,10 @@
   "description": "TUI for Prep Pad",
   "main": "index.js",
   "dependencies": {
+    "blessed": "^0.1.81",
     "noble": "^1.7.0",
-  ,
+    "rx": "^4.1.0"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
