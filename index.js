@@ -57,6 +57,25 @@ let helpBox = blessed.box({
 
 screen.append(helpBox);
 
+let dataTable = blessed.Table({
+  bottom: 1,
+  right: 0,
+  width: 19,
+  height: 'shrink',
+  border: {
+    type: 'line'
+  },
+  data: [
+    [ 'Accel', 'Value' ],
+    [ 'X', '-1' ],
+    [ 'Y', '-1' ],
+    [ 'Z', '-1' ]
+  ]
+
+});
+
+screen.append(dataTable);
+
 screen.key(['escape', 'q', 'C-c'], function(ch, key) {
   process.exit(0);
 });
@@ -82,5 +101,16 @@ device.connStatus$.subscribe(s => {
   else {
     statusLine.setContent('Connecting...');
   }
+  screen.render();
+})
+
+device.accel$.subscribe(s => {
+  let data = [
+    [ 'Accel', 'Value' ],
+    [ 'X', ''+s[0] ],
+    [ 'Y', ''+s[1] ],
+    [ 'Z', ''+s[2] ]
+  ]
+  dataTable.setData(data);
   screen.render();
 })

@@ -74,16 +74,32 @@ let connStatus$ = connection$.combineLatest(serial$, (conn, serial) => {
   }
 }).share()
 
-let xAccel$ = services$
+function makeAccelStream(characteristic) {
+  return Rx.Observable.fromEvent(characteristic, 'data')
+    .map(d => d[3] * 256 * 256 * 256 + d[2] * 256 * 256 + d[1] * 256 + d[0])
+    .startWith(-1)
+}
+
+let accel$ = services$
   .do(s => {
     s[1].characteristics[0].write(ACCEL_ON);
     s[1].characteristics[2].subscribe();
+    s[1].characteristics[3].subscribe();
+    s[1].characteristics[4].subscribe();
   })
   .flatMap(s => {
-    return Rx.Observable.fromEvent(s[1].characteristics[2], 'data');
+    let characteristics = s[1].characteristics;
+    return Rx.Observable.combineLatest(
+      makeAccelStream(characteristics[2]),
+      makeAccelStream(characteristics[3]),
+      makeAccelStream(characteristics[4])
+    )
   })
-  .map(d => d[1] * 256 + d[0])
   .share()
+
+let xAccel$ = accel$
+  .map(r => r[0])
+  .filter(v => v >= 0)
 
 function item(type, value) {
   return { type, value }
@@ -114,5 +130,6 @@ let weight$ = xAccel$
 module.exports = {
   button$,
   connStatus$,
-  weight$
+  weight$,
+  accel$
 }
